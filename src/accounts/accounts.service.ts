@@ -4,12 +4,15 @@ import { Repository } from 'typeorm';
 import { CreateAccountInput } from './inputs/create-account.input';
 import { AccountEntity } from './entities/account.entity';
 import { UpdateAccountInput } from './inputs/update-account.input';
+import { Role } from '../roles/entities/role.entity';
+import { RolesService } from '../roles/roles.service';
 
 @Injectable()
 export class AccountsService {
 	constructor(
 		@InjectRepository(AccountEntity)
 		private readonly accountRepository: Repository<AccountEntity>,
+		private readonly rolesService: RolesService,
 	) {}
 
 	findAll(): Promise<AccountEntity[]> {
@@ -17,7 +20,11 @@ export class AccountsService {
 	}
 
 	findOne(id: number): Promise<AccountEntity> {
-		return this.accountRepository.findOneBy({ id });
+		return this.accountRepository.findOneByOrFail({ id });
+	}
+
+	getRole(roleId: number): Promise<Role> {
+		return this.rolesService.findOne(roleId)
 	}
 
 	async create(data: CreateAccountInput): Promise<AccountEntity> {
@@ -34,4 +41,3 @@ export class AccountsService {
 		return id;
 	}
 }
-

@@ -1,8 +1,8 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateAccountInput {
-	@Field(() => ID)
+	@Field(() => Int)
 	id: number;
 
 	@Field({ nullable: true })
@@ -11,4 +11,3 @@ export class UpdateAccountInput {
 	@Field({ nullable: true })
 	email?: string;
 }
-

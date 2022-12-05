@@ -1,8 +1,10 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, Int } from '@nestjs/graphql';
+import { Role } from '../../roles/entities/role.entity';
 import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
@@ -10,8 +12,8 @@ import {
 @ObjectType()
 @Entity('accounts')
 export class AccountEntity {
-	@Field(() => ID)
-	@PrimaryGeneratedColumn({ type: 'integer', unsigned: true })
+	@Field(() => Int)
+	@PrimaryGeneratedColumn()
 	id: number;
 
 	@Field()
@@ -28,6 +30,13 @@ export class AccountEntity {
 
 	@Field({ nullable: true })
 	@Column({ nullable: true })
-	email: string;
-}
+	email?: string;
 
+	@Field(type => Int)
+	@Column()
+	roleId?: number
+
+	@ManyToOne(() => Role, (role) => role.account)
+	@Field((type) => [Role], { nullable: true })
+	role?: Role;
+}

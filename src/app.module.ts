@@ -4,15 +4,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountsModule } from './accounts/accounts.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+		ThrottlerModule.forRoot({
+			ttl: 60,
+			limit: 10,
+		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
 			autoSchemaFile: 'schema.gql',
 			sortSchema: true,
 			playground: true,
+			cors: {
+				origin: 'http://localhost:3000',
+				credentials: true,
+			},
 		}),
 		TypeOrmModule.forRootAsync({
 			imports: [ConfigModule],
@@ -33,12 +43,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 			}),
 		}),
 		AccountsModule,
+		RolesModule,
 	],
 	providers: [],
 })
 export class AppModule {}
-
-
-
-
-
