@@ -1,0 +1,38 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AccountEntity {
+  createdAt: DateTime!
+  email: String
+  id: ID!
+  updatedAt: DateTime!
+  username: String!
+}
+
+input CreateAccountInput {
+  email: String
+  username: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  createAccount(createAccount: CreateAccountInput!): AccountEntity!
+  removeAccount(id: Float!): Float!
+  updateAccount(updateAccount: UpdateAccountInput!): AccountEntity!
+}
+
+type Query {
+  getAllAccounts: [AccountEntity!]!
+  getOneAccount(id: Float!): AccountEntity!
+}
+
+input UpdateAccountInput {
+  email: String
+  id: ID!
+  username: String
+}
