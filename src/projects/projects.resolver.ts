@@ -19,7 +19,7 @@ export class ProjectsResolver {
 
 	@ResolveField((returns) => Server)
 	servers(@Parent() project: Project) {
-		return [{id: 1, name: "test"}];
+		return this.projectsService.getServers(project.id);
 	}
 
 	@Mutation(() => Project)

@@ -11,6 +11,7 @@ import { ProjectsModule } from '../projects/projects.module';
 		forwardRef(() => ProjectsModule),
 	],
 	providers: [ServersResolver, ServersService],
+	exports: [ServersService]
 })
 export class ServersModule {}
 
