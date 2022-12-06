@@ -32,11 +32,11 @@ export class AccountEntity {
 	@Column({ nullable: true })
 	email?: string;
 
-	@Field(type => Int)
-	@Column()
-	roleId?: number
+	// @Field(type => Int, {defaultValue:1})
+	// @Column({default:1})
+	// roleId?: number
 
-	@ManyToOne(() => Role, (role) => role.account)
-	@Field((type) => [Role], { nullable: true })
-	role?: Role;
+	// @ManyToOne(() => Role, (role) => role.account)
+	// @Field((type) => [Role], { nullable: true })
+	// role?: Role;
 }

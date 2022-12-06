@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { RolesModule } from './roles/roles.module';
+import { ServersModule } from './servers/servers.module';
 
 @Module({
 	imports: [
@@ -44,6 +45,7 @@ import { RolesModule } from './roles/roles.module';
 		}),
 		AccountsModule,
 		RolesModule,
+		ServersModule,
 	],
 	providers: [],
 })

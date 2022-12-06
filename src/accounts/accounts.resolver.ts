@@ -36,10 +36,10 @@ export class AccountsResolver {
 		return await this.accountService.create(createAccount);
 	}
 
-	@ResolveField((returns) => Role)
-	role(@Parent() account: AccountEntity): Promise<Role> {
-		return this.accountService.getRole(account.roleId);
-	}
+	// @ResolveField((returns) => Role)
+	// role(@Parent() account: AccountEntity): Promise<Role> {
+	// 	return this.accountService.getRole(account.roleId);
+	// }
 
 	@Mutation((returns) => AccountEntity)
 	async updateAccount(
