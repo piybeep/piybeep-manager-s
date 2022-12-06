@@ -1,30 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { CreateAccountInput } from './dto/create-account.input';
-import { AccountEntity } from './entities/account.entity';
+import { Account } from './entities/account.entity';
 import { UpdateAccountInput } from './dto/update-account.input';
+import { RolesService } from '../roles/roles.service';
 
 @Injectable()
 export class AccountsService {
 	constructor(
-		@InjectRepository(AccountEntity)
-		private readonly accountRepository: Repository<AccountEntity>,
+		@InjectRepository(Account)
+		private readonly accountRepository: Repository<Account>,
+		@Inject(forwardRef(() => RolesService))
+		private readonly rolesService: RolesService,
 	) {}
 
-	findAll(): Promise<AccountEntity[]> {
-		return this.accountRepository.find();
+	getRole(roleId: number) {
+		return this.rolesService.findOne(roleId);
 	}
 
-	findOne(id: number): Promise<AccountEntity> {
+	findAll(options?: FindManyOptions<Account>): Promise<Account[]> {
+		return this.accountRepository.find(options);
+	}
+
+	findOne(id: number): Promise<Account> {
 		return this.accountRepository.findOneByOrFail({ id });
 	}
 
-	async create(data: CreateAccountInput): Promise<AccountEntity> {
+	async create(data: CreateAccountInput): Promise<Account> {
 		return this.accountRepository.save(data);
 	}
 
-	async update(data: UpdateAccountInput): Promise<AccountEntity> {
+	async update(data: UpdateAccountInput): Promise<Account> {
 		await this.accountRepository.update({ id: data.id }, { ...data });
 		return await this.findOne(data.id);
 	}
@@ -34,4 +41,6 @@ export class AccountsService {
 		return id;
 	}
 }
+
+
 

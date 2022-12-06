@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateServerInput } from './dto/create-server.input';
 import { UpdateServerInput } from './dto/update-server.input';
@@ -11,6 +11,7 @@ export class ServersService {
 	constructor(
 		@InjectRepository(Server)
 		private readonly serverRepository: Repository<Server>,
+		@Inject(forwardRef(() => ProjectsService))
 		private readonly projectService: ProjectsService,
 	) {}
 
@@ -38,7 +39,4 @@ export class ServersService {
 		return this.serverRepository.delete(id);
 	}
 }
-
-
-
 

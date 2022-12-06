@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { AccountEntity } from '../../accounts/entities/account.entity';
+import { Account } from '../../accounts/entities/account.entity';
 
 @Entity('roles')
 @ObjectType()
@@ -14,7 +14,12 @@ export class Role {
 	name: string;
 
 	@Column()
-	@Field()
+	@Field((type) => Int)
 	level: number;
+
+	@OneToMany(() => Account, (account) => account.role)
+	@Field((type) => [Account], { nullable: true })
+	accounts?: Account[];
 }
+
 

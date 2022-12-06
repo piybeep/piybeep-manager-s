@@ -11,8 +11,8 @@ import {
 
 @ObjectType()
 @Entity('accounts')
-export class AccountEntity {
-	@Field(() => Int)
+export class Account {
+	@Field((type) => Int)
 	@PrimaryGeneratedColumn()
 	id: number;
 
@@ -31,4 +31,14 @@ export class AccountEntity {
 	@Field({ nullable: true })
 	@Column({ nullable: true })
 	email?: string;
+
+	@Column()
+	@Field((type) => Int)
+	roleId: number;
+
+	@ManyToOne(() => Role, (role) => role.accounts)
+	@Field((type) => Role)
+	role: Role;
 }
+
+

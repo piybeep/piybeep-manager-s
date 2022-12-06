@@ -23,6 +23,7 @@ export class Project {
 
 	@OneToMany(() => Server, (server) => server.project)
 	@Field((type) => [Server], { nullable: true })
-	servers?: any;
+	servers?: Server[];
 }
+
 

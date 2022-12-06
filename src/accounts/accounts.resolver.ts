@@ -1,37 +1,53 @@
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import {
+	Resolver,
+	Query,
+	Args,
+	Mutation,
+	ResolveField,
+	Parent,
+	Int,
+} from '@nestjs/graphql';
+
 import { AccountsService } from './accounts.service';
-import { AccountEntity } from './entities/account.entity';
+
+import { Account } from './entities/account.entity';
+import { Role } from '../roles/entities/role.entity';
+
 import { CreateAccountInput } from './dto/create-account.input';
 import { UpdateAccountInput } from './dto/update-account.input';
-import { Int } from '@nestjs/graphql';
 
-@Resolver('Accounts')
+@Resolver(() => Account)
 export class AccountsResolver {
 	constructor(private readonly accountService: AccountsService) {}
 
-	@Query((returns) => [AccountEntity])
-	async accounts(): Promise<AccountEntity[]> {
+	@ResolveField((returns) => Role)
+	role(@Parent() account: Account) {
+		return this.accountService.getRole(account.roleId);
+	}
+
+	@Query((returns) => [Account])
+	async accounts(): Promise<Account[]> {
 		return await this.accountService.findAll();
 	}
 
-	@Query((returns) => AccountEntity)
+	@Query((returns) => Account)
 	async account(
 		@Args('id', { type: () => Int }) id: number,
-	): Promise<AccountEntity> {
+	): Promise<Account> {
 		return await this.accountService.findOne(id);
 	}
 
-	@Mutation((returns) => AccountEntity)
+	@Mutation((returns) => Account)
 	async createAccount(
 		@Args('createAccount') createAccount: CreateAccountInput,
-	): Promise<AccountEntity> {
+	): Promise<Account> {
 		return await this.accountService.create(createAccount);
 	}
 
-	@Mutation((returns) => AccountEntity)
+	@Mutation((returns) => Account)
 	async updateAccount(
 		@Args('updateAccount') updateAccount: UpdateAccountInput,
-	): Promise<AccountEntity> {
+	): Promise<Account> {
 		return await this.accountService.update(updateAccount);
 	}
 
