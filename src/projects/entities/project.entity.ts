@@ -1,9 +1,9 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('server')
+@Entity()
 @ObjectType()
-export class Server {
+export class Project {
 	@PrimaryGeneratedColumn()
 	@Field((type) => Int)
 	id: number;
@@ -11,9 +11,5 @@ export class Server {
 	@Column()
 	@Field()
 	name: string;
-
-	@Column()
-	@Field()
-	ip: string;
 }
 

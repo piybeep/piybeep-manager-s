@@ -31,12 +31,4 @@ export class AccountEntity {
 	@Field({ nullable: true })
 	@Column({ nullable: true })
 	email?: string;
-
-	// @Field(type => Int, {defaultValue:1})
-	// @Column({default:1})
-	// roleId?: number
-
-	// @ManyToOne(() => Role, (role) => role.account)
-	// @Field((type) => [Role], { nullable: true })
-	// role?: Role;
 }

@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateServerInput } from './dto/create-server.input';
 import { UpdateServerInput } from './dto/update-server.input';
+import { Server } from './entities/server.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ServersService {
-  create(createServerInput: CreateServerInput) {
-    return 'This action adds a new server';
-  }
+	constructor(
+		@InjectRepository(Server)
+		private readonly serverRepository: Repository<Server>,
+	) {}
 
-  findAll() {
-    return `This action returns all servers`;
-  }
+	create(createServerInput: CreateServerInput) {
+		return this.serverRepository.save(createServerInput);
+	}
 
-  findOne(id: number) {
-    return `This action returns a #${id} server`;
-  }
+	findAll() {
+		return this.serverRepository.find();
+	}
 
-  update(id: number, updateServerInput: UpdateServerInput) {
-    return `This action updates a #${id} server`;
-  }
+	findOne(id: number) {
+		return this.serverRepository.findOneBy({ id });
+	}
 
-  remove(id: number) {
-    return `This action removes a #${id} server`;
-  }
+	update(id: number, updateServerInput: UpdateServerInput) {
+		return this.serverRepository.update(id, updateServerInput);
+	}
+
+	remove(id: number) {
+		return this.serverRepository.delete(id);
+	}
 }
+

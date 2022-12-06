@@ -7,6 +7,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { RolesModule } from './roles/roles.module';
 import { ServersModule } from './servers/servers.module';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
 	imports: [
@@ -46,6 +47,7 @@ import { ServersModule } from './servers/servers.module';
 		AccountsModule,
 		RolesModule,
 		ServersModule,
+		ProjectsModule,
 	],
 	providers: [],
 })

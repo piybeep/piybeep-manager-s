@@ -1,11 +1,8 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 
 @InputType()
-export class CreateServerInput {
+export class CreateProjectInput {
 	@Field()
 	name: string;
-
-	@Field()
-	ip: string;
 }
 

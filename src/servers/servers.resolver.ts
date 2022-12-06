@@ -6,30 +6,38 @@ import { UpdateServerInput } from './dto/update-server.input';
 
 @Resolver(() => Server)
 export class ServersResolver {
-  constructor(private readonly serversService: ServersService) {}
+	constructor(private readonly serversService: ServersService) {}
 
-  @Mutation(() => Server)
-  createServer(@Args('createServerInput') createServerInput: CreateServerInput) {
-    return this.serversService.create(createServerInput);
-  }
+	@Mutation(() => Server)
+	createServer(
+		@Args('createServerInput') createServerInput: CreateServerInput,
+	) {
+		return this.serversService.create(createServerInput);
+	}
 
-  @Query(() => [Server], { name: 'servers' })
-  findAll() {
-    return this.serversService.findAll();
-  }
+	@Query(() => [Server], { name: 'servers' })
+	findAll() {
+		return this.serversService.findAll();
+	}
 
-  @Query(() => Server, { name: 'server' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.serversService.findOne(id);
-  }
+	@Query(() => Server, { name: 'server' })
+	findOne(@Args('id', { type: () => Int }) id: number) {
+		return this.serversService.findOne(id);
+	}
 
-  @Mutation(() => Server)
-  updateServer(@Args('updateServerInput') updateServerInput: UpdateServerInput) {
-    return this.serversService.update(updateServerInput.id, updateServerInput);
-  }
+	@Mutation(() => Server)
+	updateServer(
+		@Args('updateServerInput') updateServerInput: UpdateServerInput,
+	) {
+		return this.serversService.update(
+			updateServerInput.id,
+			updateServerInput,
+		);
+	}
 
-  @Mutation(() => Server)
-  removeServer(@Args('id', { type: () => Int }) id: number) {
-    return this.serversService.remove(id);
-  }
+	@Mutation(() => Server)
+	removeServer(@Args('id', { type: () => Int }) id: number) {
+		return this.serversService.remove(id);
+	}
 }
+

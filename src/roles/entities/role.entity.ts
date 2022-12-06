@@ -16,9 +16,5 @@ export class Role {
 	@Column()
 	@Field()
 	level: number;
-
-	// @OneToMany(() => AccountEntity, (account) => account.role)
-	// @Field((type) => AccountEntity)
-	// account: AccountEntity[];
 }
 
