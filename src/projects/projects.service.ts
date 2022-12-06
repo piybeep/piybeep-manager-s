@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Project } from './entities/project.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -16,8 +16,8 @@ export class ProjectsService {
 		return this.projectRepository.save(createProjectInput);
 	}
 
-	findAll() {
-		return this.projectRepository.find();
+	findAll(options?: FindManyOptions<Project>) {
+		return this.projectRepository.find(options);
 	}
 
 	findOne(id: number) {

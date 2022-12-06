@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateServerInput } from './dto/create-server.input';
 import { UpdateServerInput } from './dto/update-server.input';
 import { Server } from './entities/server.entity';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { ProjectsService } from '../projects/projects.service';
 
 @Injectable()
@@ -22,8 +22,8 @@ export class ServersService {
 		return this.serverRepository.save(createServerInput);
 	}
 
-	findAll() {
-		return this.serverRepository.find();
+	findAll(options?: FindManyOptions<Server>) {
+		return this.serverRepository.find(options);
 	}
 
 	findOne(id: number) {
@@ -38,4 +38,7 @@ export class ServersService {
 		return this.serverRepository.delete(id);
 	}
 }
+
+
+
 
