@@ -1,12 +1,26 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+	Resolver,
+	Query,
+	Mutation,
+	Args,
+	Int,
+	Parent,
+	ResolveField,
+} from '@nestjs/graphql';
 import { ServersService } from './servers.service';
 import { Server } from './entities/server.entity';
 import { CreateServerInput } from './dto/create-server.input';
 import { UpdateServerInput } from './dto/update-server.input';
+import { Project } from '../projects/entities/project.entity';
 
 @Resolver(() => Server)
 export class ServersResolver {
 	constructor(private readonly serversService: ServersService) {}
+
+	@ResolveField((returns) => Project)
+	project(@Parent() server: Server) {
+		return this.serversService.getProject(server.projectId);
+	}
 
 	@Mutation(() => Server)
 	createServer(

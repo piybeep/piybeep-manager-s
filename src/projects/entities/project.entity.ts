@@ -1,7 +1,8 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Server } from '../../servers/entities/server.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity('project')
 @ObjectType()
 export class Project {
 	@PrimaryGeneratedColumn()
@@ -11,5 +12,9 @@ export class Project {
 	@Column()
 	@Field()
 	name: string;
+
+	@OneToMany(() => Server, (server) => server.project)
+	@Field((type) => [Server], { nullable: true })
+	servers?: any;
 }
 
