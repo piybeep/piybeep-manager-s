@@ -7,14 +7,15 @@ import {
 	Parent,
 	Int,
 } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 
 import { AccountsService } from './accounts.service';
 
 import { Account } from './entities/account.entity';
 import { Role } from '../roles/entities/role.entity';
 
-import { CreateAccountInput } from './dto/create-account.input';
 import { UpdateAccountInput } from './dto/update-account.input';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Resolver(() => Account)
 export class AccountsResolver {
@@ -26,6 +27,7 @@ export class AccountsResolver {
 	}
 
 	@Query((returns) => [Account])
+	@UseGuards(JwtAuthGuard)
 	async accounts(): Promise<Account[]> {
 		return await this.accountService.findAll();
 	}
@@ -35,13 +37,6 @@ export class AccountsResolver {
 		@Args('id', { type: () => Int }) id: number,
 	): Promise<Account> {
 		return await this.accountService.findOne(id);
-	}
-
-	@Mutation((returns) => Account)
-	async createAccount(
-		@Args('createAccount') createAccount: CreateAccountInput,
-	): Promise<Account> {
-		return await this.accountService.create(createAccount);
 	}
 
 	@Mutation((returns) => Account)

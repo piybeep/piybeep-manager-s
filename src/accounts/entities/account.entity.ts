@@ -1,10 +1,12 @@
 import { Field, ObjectType, Int } from '@nestjs/graphql';
 import { Role } from '../../roles/entities/role.entity';
+import { Auth } from '../../auth/entities/auth.entity';
 import {
 	Column,
 	CreateDateColumn,
 	Entity,
 	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
@@ -39,6 +41,9 @@ export class Account {
 	@ManyToOne(() => Role, (role) => role.accounts)
 	@Field((type) => Role)
 	role: Role;
-}
 
+	@OneToMany(() => Auth, (auth) => auth.account)
+	@Field((type) => [Auth], { nullable: true })
+	auth?: Auth[];
+}
 

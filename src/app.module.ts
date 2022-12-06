@@ -8,6 +8,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { RolesModule } from './roles/roles.module';
 import { ServersModule } from './servers/servers.module';
 import { ProjectsModule } from './projects/projects.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
 	imports: [
@@ -41,13 +42,14 @@ import { ProjectsModule } from './projects/projects.module';
 				entities: [__dirname + 'dist/**/*.entity.{t,j}s'],
 				synchronize: true,
 				autoLoadEntities: true,
-				logging: true,
+				// logging: true,
 			}),
 		}),
 		AccountsModule,
 		RolesModule,
 		ServersModule,
 		ProjectsModule,
+		AuthModule,
 	],
 	providers: [],
 })
