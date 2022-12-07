@@ -4,7 +4,8 @@ import { InputType, Int, Field } from '@nestjs/graphql';
 export class CreateRoleInput {
 	@Field()
 	name: string;
-	@Field()
-	level: number;
+
+	@Field({ defaultValue: 1 })
+	level?: number;
 }
 

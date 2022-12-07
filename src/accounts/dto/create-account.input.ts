@@ -7,7 +7,4 @@ export class CreateAccountInput {
 
 	@Field({ nullable: true })
 	email?: string;
-
-	@Field((type) => Int, { nullable: true })
-	roleId?: number;
 }

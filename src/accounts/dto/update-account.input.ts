@@ -1,13 +1,12 @@
-import { Field, ID, InputType, Int } from '@nestjs/graphql';
+import { Field, ID, InputType, Int, PartialType } from '@nestjs/graphql';
+import { CreateAccountInput } from './create-account.input';
 
 @InputType()
-export class UpdateAccountInput {
+export class UpdateAccountInput extends PartialType(CreateAccountInput) {
 	@Field(() => Int)
 	id: number;
 
-	@Field({ nullable: true })
-	username?: string;
-
-	@Field({ nullable: true })
-	email?: string;
+	@Field((type) => Int)
+	roleId?: number;
 }
+

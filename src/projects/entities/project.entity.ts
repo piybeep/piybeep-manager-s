@@ -9,7 +9,7 @@ import {
 	UpdateDateColumn,
 } from 'typeorm';
 
-enum Status {
+export enum Status {
 	IN_PLANS = 'В планах',
 	IN_QUEUE = 'В очереди',
 	IN_DEVELOPMENT_PRIORITY = 'В разработке (приоритет)',
