@@ -4,9 +4,10 @@ import { Status } from '../entities/project.entity';
 
 @InputType()
 export class UpdateProjectInput extends PartialType(CreateProjectInput) {
-  @Field(() => Int)
-  id: number;
+	@Field(() => Int)
+	id: number;
 
-	@Field(() => Status)
+	@Field(() => Status, { nullable: true })
 	status?: Status;
 }
+
