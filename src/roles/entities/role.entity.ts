@@ -13,13 +13,12 @@ export class Role {
 	@Field()
 	name: string;
 
-	@Column()
-	@Field((type) => Int)
-	level: number;
+	@Column({ default: 1 })
+	@Field((type) => Int, { defaultValue: 1 })
+	level?: number;
 
 	@OneToMany(() => Account, (account) => account.role)
 	@Field((type) => [Account], { nullable: true })
 	accounts?: Account[];
 }
-
 

@@ -9,6 +9,7 @@ import { RolesModule } from './roles/roles.module';
 import { ServersModule } from './servers/servers.module';
 import { ProjectsModule } from './projects/projects.module';
 import { AuthModule } from './auth/auth.module';
+import { SourcesModule } from './sources/sources.module';
 
 @Module({
 	imports: [
@@ -50,6 +51,7 @@ import { AuthModule } from './auth/auth.module';
 		ServersModule,
 		ProjectsModule,
 		AuthModule,
+		SourcesModule,
 	],
 	providers: [],
 })
