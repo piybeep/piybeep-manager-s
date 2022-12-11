@@ -33,11 +33,11 @@ export class ProjectsResolver {
 	@Query(() => [Project], { name: 'projects' })
 	findAll(
 		@Args('statusFilter', { nullable: true, type: () => [String] })
-		statusFilter: String[],
+		statusFilter?: String[],
 	) {
 		return this.projectsService.findAll({
 			where: {
-				status: In(statusFilter)
+				status: statusFilter ? In(statusFilter) : null
 			}
 		});
 	}
