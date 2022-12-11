@@ -12,6 +12,7 @@ import { Server } from './entities/server.entity';
 import { CreateServerInput } from './dto/create-server.input';
 import { UpdateServerInput } from './dto/update-server.input';
 import { Project } from '../projects/entities/project.entity';
+import { FindOptionsOrderValue } from 'typeorm';
 
 @Resolver(() => Server)
 export class ServersResolver {
@@ -30,8 +31,19 @@ export class ServersResolver {
 	}
 
 	@Query(() => [Server], { name: 'servers' })
-	findAll() {
-		return this.serversService.findAll();
+	findAll(
+		@Args('projectId', { type: () => Int, nullable: true })
+		projectId?: number,
+		@Args('sort', {
+			type: () => Boolean,
+			nullable: true,
+		})
+		sort?: FindOptionsOrderValue,
+	) {
+		return this.serversService.findAll({
+			where: { projectId },
+			order: { updatedAt: sort ? 1 : -1 },
+		});
 	}
 
 	@Query(() => Server, { name: 'server' })
@@ -54,4 +66,6 @@ export class ServersResolver {
 		return this.serversService.remove(id);
 	}
 }
+
+
 

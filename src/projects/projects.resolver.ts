@@ -12,6 +12,7 @@ import { Project } from './entities/project.entity';
 import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Server } from '../servers/entities/server.entity';
+import { In } from 'typeorm';
 
 @Resolver(() => Project)
 export class ProjectsResolver {
@@ -30,8 +31,15 @@ export class ProjectsResolver {
 	}
 
 	@Query(() => [Project], { name: 'projects' })
-	findAll() {
-		return this.projectsService.findAll();
+	findAll(
+		@Args('statusFilter', { nullable: true, type: () => [String] })
+		statusFilter: String[],
+	) {
+		return this.projectsService.findAll({
+			where: {
+				status: In(statusFilter)
+			}
+		});
 	}
 
 	@Query(() => Project, { name: 'project' })
