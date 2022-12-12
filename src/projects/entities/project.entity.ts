@@ -9,20 +9,20 @@ import {
 	UpdateDateColumn,
 } from 'typeorm';
 
-export enum Status {
-	IN_PLANS = 'В планах',
-	IN_QUEUE = 'В очереди',
-	IN_DEVELOPMENT_PRIORITY = 'В разработке (приоритет)',
-	IN_DEVELOPMENT_DESIGN = 'В разработке (дизайн)',
-	IN_DEVELOPMENT = 'В разработке',
-	FROZEN = 'В заморозке',
-	SUPPORT = 'Поддержка',
-	COMPLITED = 'Завершено',
-}
+// export enum Status {
+// 	'IN_PLANS' = 'В планах',
+// 	'IN_QUEUE' = 'В очереди',
+// 	'IN_DEVELOPMENT_PRIORITY' = 'В разработке (приоритет)',
+// 	'IN_DEVELOPMENT_DESIGN' = 'В разработке (дизайн)',
+// 	'IN_DEVELOPMENT' = 'В разработке',
+// 	'FROZEN' = 'В заморозке',
+// 	'SUPPORT' = 'Поддержка',
+// 	'COMPLITED' = 'Завершено',
+// }
 
-registerEnumType(Status, {
-	name: 'Status',
-});
+// registerEnumType(Status, {
+// 	name: 'Status',
+// });
 
 @Entity('project')
 @ObjectType()
@@ -39,13 +39,17 @@ export class Project {
 	@Field({ nullable: true })
 	link?: string;
 
-	@Column({
-		type: 'enum',
-		enum: Status,
-		default: Status.IN_PLANS,
-	})
-	@Field(() => Status)
-	status: Status;
+	// @Column({
+	// 	type: 'enum',
+	// 	enum: Status,
+	// 	default: Status['IN_PLANS'],
+	// })
+	// @Field(() => Status)
+	// status: Status;
+
+	@Column({ default: 'В планах' })
+	@Field({ defaultValue: 'В планах' })
+	status: string;
 
 	@CreateDateColumn()
 	@Field()

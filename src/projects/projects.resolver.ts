@@ -12,7 +12,7 @@ import { Project } from './entities/project.entity';
 import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Server } from '../servers/entities/server.entity';
-import { In } from 'typeorm';
+import { FindOptionsOrderValue, In } from 'typeorm';
 
 @Resolver(() => Project)
 export class ProjectsResolver {
@@ -34,11 +34,14 @@ export class ProjectsResolver {
 	findAll(
 		@Args('statusFilter', { nullable: true, type: () => [String] })
 		statusFilter?: String[],
+		@Args('statusSort', { nullable: true, type: () => Boolean })
+		statusSort?: FindOptionsOrderValue,
 	) {
 		return this.projectsService.findAll({
 			where: {
-				status: statusFilter ? In(statusFilter) : null
-			}
+				status: statusFilter ? In(statusFilter) : null,
+			},
+			order: { status: statusSort ? 1 : -1, updatedAt: 1 },
 		});
 	}
 
