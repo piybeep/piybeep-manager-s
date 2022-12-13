@@ -6,6 +6,7 @@ import { Auth } from './entities/auth.entity';
 import { Repository } from 'typeorm';
 import { Account } from '../accounts/entities/account.entity';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -21,28 +22,58 @@ export class AuthService {
 			where: { username },
 		});
 
-		if (!account) return null;
+		if (!account) return new Error('Неверный логин или пароль');
 
 		const auth = await this.authRepository.findOneBy({
 			accountId: account.id,
 		});
-		if (auth.token != password) return null;
 
-		return account;
+		// console.log(await this.authRepository.find(), account.id);
+
+		if (!auth) return new Error('Auth not found');
+		if (!(await bcrypt.compare(password, auth.token))) return new Error('Неверный логин или пароль');
+
+		return this.login(account);
 	}
 
 	async login(account: Account) {
+		const role = await this.accountService.getRole(account.roleId);
 		return {
 			access_token: this.jwtService.sign({
 				sub: account.id,
 				username: account.username,
 				role: {
-					name: account.role.name,
-					level: account.role.level,
+					name: role.name,
+					level: role.level,
+				},
+			}),
+			account,
+		};
+	}
+
+	async singup(username: string, password: string) {
+		const account = await this.accountService.create({ username });
+		const token = await bcrypt.hash(password, 10);
+		await this.authRepository.save({
+			accountId: account.id,
+			token,
+		});
+		// console.log(auth);
+
+		const role = await this.accountService.getRole(account.roleId);
+		return {
+			access_token: this.jwtService.sign({
+				sub: account.id,
+				username: account.username,
+				role: {
+					name: role.name,
+					level: role.level,
 				},
 			}),
 			account,
 		};
 	}
 }
+
+
 

@@ -11,12 +11,24 @@ export class AuthResolver {
 	constructor(private readonly authService: AuthService) {}
 
 	@Mutation((returns) => LoginResponse)
-	@UseGuards(JwtAuthGuard)
-	login(
+	async login(
 		@Args('loginAccountInput') loginAccountInput: LoginAccountInput,
-		@Context() context,
 	) {
-		return this.authService.login(context.account);
+		const answer = await this.authService.validateAccount(
+			loginAccountInput.username,
+			loginAccountInput.password,
+		);
+		console.log(answer);
+
+		return answer;
+	}
+
+	@Mutation((returns) => LoginResponse)
+	singup(
+		@Args('username') username: string,
+		@Args('password') password: string,
+	) {
+		return this.authService.singup(username, password);
 	}
 }
 

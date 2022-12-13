@@ -13,6 +13,8 @@ import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Server } from '../servers/entities/server.entity';
 import { FindOptionsOrderValue, In } from 'typeorm';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => Project)
 export class ProjectsResolver {
@@ -31,6 +33,7 @@ export class ProjectsResolver {
 	}
 
 	@Query(() => [Project], { name: 'projects' })
+	@UseGuards(JwtAuthGuard)
 	findAll(
 		@Args('statusFilter', { nullable: true, type: () => [String] })
 		statusFilter?: String[],

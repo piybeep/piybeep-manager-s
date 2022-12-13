@@ -10,6 +10,7 @@ import { AuthResolver } from './auth.resolver';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
 import { Auth } from './entities/auth.entity';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Module({
 	imports: [
@@ -21,7 +22,8 @@ import { Auth } from './entities/auth.entity';
 			signOptions: { expiresIn: '60s' },
 		}),
 	],
-	providers: [AuthService, AuthResolver, JwtStrategy],
+	providers: [AuthService, AuthResolver, JwtAuthGuard,JwtStrategy],
 })
 export class AuthModule {}
+
 

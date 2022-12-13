@@ -27,11 +27,11 @@ export class Account {
 	updatedAt: Date;
 
 	@Field()
-	@Column()
+	@Column({ unique: true })
 	username: string;
 
 	@Field({ nullable: true })
-	@Column({ nullable: true })
+	@Column({ nullable: true, unique: true })
 	email?: string;
 
 	@Column()
@@ -46,4 +46,5 @@ export class Account {
 	@Field((type) => [Auth], { nullable: true })
 	auth?: Auth[];
 }
+
 

@@ -28,7 +28,7 @@ export class AccountsService {
 	}
 
 	async create(data: CreateAccountInput): Promise<Account> {
-		return this.accountRepository.save(data);
+		return this.accountRepository.save({...data, roleId: 1});
 	}
 
 	async update(data: UpdateAccountInput): Promise<Account> {
