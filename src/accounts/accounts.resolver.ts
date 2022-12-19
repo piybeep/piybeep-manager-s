@@ -6,16 +6,15 @@ import {
 	ResolveField,
 	Parent,
 	Int,
+	Context,
 } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 
 import { AccountsService } from './accounts.service';
-
 import { Account } from './entities/account.entity';
 import { Role } from '../roles/entities/role.entity';
-
 import { UpdateAccountInput } from './dto/update-account.input';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Resolver(() => Account)
 export class AccountsResolver {
@@ -26,19 +25,24 @@ export class AccountsResolver {
 		return this.accountService.getRole(account.roleId);
 	}
 
+	@UseGuards(GqlAuthGuard)
 	@Query((returns) => [Account])
-	@UseGuards(JwtAuthGuard)
 	async accounts(): Promise<Account[]> {
 		return await this.accountService.findAll();
 	}
 
+	@UseGuards(GqlAuthGuard)
 	@Query((returns) => Account)
 	async account(
-		@Args('id', { type: () => Int }) id: number,
+		@Context() context: any,
+		@Args('id', { type: () => Int, nullable: true }) id?: number,
 	): Promise<Account> {
-		return await this.accountService.findOne(id);
+		const _id = id ?? context.req?.user?.id;
+
+		return await this.accountService.findOne(_id);
 	}
 
+	@UseGuards(GqlAuthGuard)
 	@Mutation((returns) => Account)
 	async updateAccount(
 		@Args('updateAccount') updateAccount: UpdateAccountInput,
@@ -46,6 +50,7 @@ export class AccountsResolver {
 		return await this.accountService.update(updateAccount);
 	}
 
+	@UseGuards(GqlAuthGuard)
 	@Mutation((returns) => Number)
 	async removeAccount(@Args('id') id: number): Promise<number> {
 		return await this.accountService.remove(id);

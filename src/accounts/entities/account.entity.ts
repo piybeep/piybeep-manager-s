@@ -1,6 +1,7 @@
 import { Field, ObjectType, Int } from '@nestjs/graphql';
 import { Role } from '../../roles/entities/role.entity';
 import { Auth } from '../../auth/entities/auth.entity';
+import { Session } from '../../auth/entities/session.entity';
 import {
 	Column,
 	CreateDateColumn,
@@ -45,6 +46,13 @@ export class Account {
 	@OneToMany(() => Auth, (auth) => auth.account)
 	@Field((type) => [Auth], { nullable: true })
 	auth?: Auth[];
+
+	@OneToMany(() => Session, (sessions) => sessions.account)
+	@Field((type) => [Session], { nullable: true })
+	sessions?: Session[];
 }
+
+
+
 
 

@@ -7,12 +7,15 @@ import {
 	Parent,
 	ResolveField,
 } from '@nestjs/graphql';
+import { FindOptionsOrderValue } from 'typeorm';
+
 import { ServersService } from './servers.service';
 import { Server } from './entities/server.entity';
 import { CreateServerInput } from './dto/create-server.input';
 import { UpdateServerInput } from './dto/update-server.input';
 import { Project } from '../projects/entities/project.entity';
-import { FindOptionsOrderValue } from 'typeorm';
+import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => Server)
 export class ServersResolver {
@@ -23,6 +26,7 @@ export class ServersResolver {
 		return this.serversService.getProject(server.projectId);
 	}
 
+	@UseGuards(GqlAuthGuard)
 	@Mutation(() => Server)
 	createServer(
 		@Args('createServerInput') createServerInput: CreateServerInput,
@@ -30,10 +34,11 @@ export class ServersResolver {
 		return this.serversService.create(createServerInput);
 	}
 
+	@UseGuards(GqlAuthGuard)
 	@Query(() => [Server], { name: 'servers' })
 	findAll(
-		@Args('projectId', { type: () => Int, nullable: true })
-		projectId?: number,
+		@Args('projectId', { nullable: true })
+		projectId?: string,
 		@Args('sort', {
 			type: () => Boolean,
 			nullable: true,
@@ -46,11 +51,13 @@ export class ServersResolver {
 		});
 	}
 
+	@UseGuards(GqlAuthGuard)
 	@Query(() => Server, { name: 'server' })
-	findOne(@Args('id', { type: () => Int }) id: number) {
+	findOne(@Args('id') id: string) {
 		return this.serversService.findOne(id);
 	}
 
+	@UseGuards(GqlAuthGuard)
 	@Mutation(() => Server)
 	updateServer(
 		@Args('updateServerInput') updateServerInput: UpdateServerInput,
@@ -61,11 +68,10 @@ export class ServersResolver {
 		);
 	}
 
+	@UseGuards(GqlAuthGuard)
 	@Mutation(() => Server)
-	removeServer(@Args('id', { type: () => Int }) id: number) {
+	removeServer(@Args('id') id: string) {
 		return this.serversService.remove(id);
 	}
 }
-
-
 

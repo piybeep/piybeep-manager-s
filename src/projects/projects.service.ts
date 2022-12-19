@@ -1,9 +1,10 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, forwardRef, Inject } from '@nestjs/common';
+import { FindManyOptions, Repository } from 'typeorm';
+
 import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Project } from './entities/project.entity';
-import { FindManyOptions, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ServersService } from '../servers/servers.service';
 
 @Injectable()
@@ -15,7 +16,7 @@ export class ProjectsService {
 		private readonly serversService: ServersService,
 	) {}
 
-	getServers(projectId: number) {
+	getServers(projectId: string) {
 		return this.serversService.findAll({ where: { projectId } });
 	}
 
@@ -27,15 +28,15 @@ export class ProjectsService {
 		return this.projectRepository.find(options);
 	}
 
-	findOne(id: number) {
+	findOne(id: string) {
 		return this.projectRepository.findOneBy({ id });
 	}
 
-	update(id: number, updateProjectInput: UpdateProjectInput) {
+	update(id: string, updateProjectInput: UpdateProjectInput) {
 		return this.projectRepository.update(id, updateProjectInput);
 	}
 
-	remove(id: number) {
+	remove(id: string) {
 		return this.projectRepository.delete(id);
 	}
 }

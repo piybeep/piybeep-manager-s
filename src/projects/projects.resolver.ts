@@ -13,7 +13,7 @@ import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { Server } from '../servers/entities/server.entity';
 import { FindOptionsOrderValue, In } from 'typeorm';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { GqlAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => Project)
@@ -26,6 +26,7 @@ export class ProjectsResolver {
 	}
 
 	@Mutation(() => Project)
+	@UseGuards(GqlAuthGuard)
 	createProject(
 		@Args('createProjectInput') createProjectInput: CreateProjectInput,
 	) {
@@ -33,7 +34,7 @@ export class ProjectsResolver {
 	}
 
 	@Query(() => [Project], { name: 'projects' })
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(GqlAuthGuard)
 	findAll(
 		@Args('statusFilter', { nullable: true, type: () => [String] })
 		statusFilter?: String[],
@@ -49,11 +50,13 @@ export class ProjectsResolver {
 	}
 
 	@Query(() => Project, { name: 'project' })
-	findOne(@Args('id', { type: () => Int }) id: number) {
+	@UseGuards(GqlAuthGuard)
+	findOne(@Args('id') id: string) {
 		return this.projectsService.findOne(id);
 	}
 
 	@Mutation(() => Project)
+	@UseGuards(GqlAuthGuard)
 	updateProject(
 		@Args('updateProjectInput') updateProjectInput: UpdateProjectInput,
 	) {
@@ -64,7 +67,8 @@ export class ProjectsResolver {
 	}
 
 	@Mutation(() => Project)
-	removeProject(@Args('id', { type: () => Int }) id: number) {
+	@UseGuards(GqlAuthGuard)
+	removeProject(@Args('id') id: string) {
 		return this.projectsService.remove(id);
 	}
 }

@@ -1,9 +1,16 @@
-import { Field, ObjectType, Int } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+	Column,
+	Entity,
+	OneToOne,
+	PrimaryGeneratedColumn,
+	CreateDateColumn,
+	UpdateDateColumn,
+} from 'typeorm';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Account } from '../../accounts/entities/account.entity';
 
-@ObjectType()
 @Entity('auth')
+@ObjectType()
 export class Auth {
 	@PrimaryGeneratedColumn()
 	@Field((type) => Int)
@@ -17,8 +24,15 @@ export class Auth {
 	@Field((type) => Int)
 	accountId: number;
 
-	@ManyToOne(() => Account, (account) => account.auth)
+	@OneToOne((type) => Account)
 	@Field((type) => Account)
 	account: Account;
-}
 
+	@CreateDateColumn()
+	@Field((type) => Date)
+	createdAt: Date;
+
+	@UpdateDateColumn()
+	@Field((type) => Date)
+	updatedAt: Date;
+}

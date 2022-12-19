@@ -1,9 +1,10 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindManyOptions } from 'typeorm';
+
 import { CreateAccountInput } from './dto/create-account.input';
-import { Account } from './entities/account.entity';
 import { UpdateAccountInput } from './dto/update-account.input';
+import { Account } from './entities/account.entity';
 import { RolesService } from '../roles/roles.service';
 
 @Injectable()
@@ -28,7 +29,9 @@ export class AccountsService {
 	}
 
 	async create(data: CreateAccountInput): Promise<Account> {
-		return this.accountRepository.save({...data, roleId: 1});
+		const account = this.accountRepository.create({ ...data, roleId: 1 });
+
+		return await this.accountRepository.save(account);
 	}
 
 	async update(data: UpdateAccountInput): Promise<Account> {
@@ -41,6 +44,4 @@ export class AccountsService {
 		return id;
 	}
 }
-
-
 

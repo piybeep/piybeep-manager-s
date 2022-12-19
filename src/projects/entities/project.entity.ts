@@ -27,9 +27,9 @@ import {
 @Entity('project')
 @ObjectType()
 export class Project {
-	@PrimaryGeneratedColumn()
-	@Field((type) => Int)
-	id: number;
+	@PrimaryGeneratedColumn('uuid')
+	@Field()
+	id: string;
 
 	@Column()
 	@Field()

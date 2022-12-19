@@ -24,9 +24,10 @@ import { SourcesModule } from './sources/sources.module';
 			sortSchema: true,
 			playground: true,
 			cors: {
-				origin: 'http://localhost:3000',
+				origin: true, // 'http://localhost:3000',
 				credentials: true,
 			},
+			context: ({ req, res }) => ({ req, res }),
 		}),
 		TypeOrmModule.forRootAsync({
 			imports: [ConfigModule],
@@ -51,7 +52,7 @@ import { SourcesModule } from './sources/sources.module';
 		ServersModule,
 		ProjectsModule,
 		AuthModule,
-		SourcesModule,
+		// SourcesModule,
 	],
 	providers: [],
 })

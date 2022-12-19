@@ -9,6 +9,6 @@ export class CreateServerInput {
 	ip: string;
 
 	@Field((type) => Int)
-	projectId: number;
+	projectId: string;
 }
 

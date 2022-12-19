@@ -1,18 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AccountsService } from '../accounts/accounts.service';
-import { LoginAccountInput } from './dto/login-account.input';
-import { Auth } from './entities/auth.entity';
 import { Repository } from 'typeorm';
-import { Account } from '../accounts/entities/account.entity';
 import { JwtService } from '@nestjs/jwt';
+
+import { Auth } from './entities/auth.entity';
+import { Session } from './entities/session.entity';
+import { AccountsService } from '../accounts/accounts.service';
+import { Account } from '../accounts/entities/account.entity';
 import * as bcrypt from 'bcrypt';
+import { SignupInput } from './dto/signup.input';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		@InjectRepository(Auth)
-		private readonly authRepository: Repository<Auth>,
+		private readonly authRepos: Repository<Auth>,
+		@InjectRepository(Session)
+		private readonly sessionRepos: Repository<Session>,
 		private readonly accountService: AccountsService,
 		private readonly jwtService: JwtService,
 	) {}
@@ -22,58 +26,52 @@ export class AuthService {
 			where: { username },
 		});
 
-		if (!account) return new Error('Неверный логин или пароль');
+		if (!account) throw new Error('Неверный логин или пароль');
 
-		const auth = await this.authRepository.findOneBy({
+		const auth = await this.authRepos.findOneBy({
 			accountId: account.id,
 		});
 
-		// console.log(await this.authRepository.find(), account.id);
+		if (!auth) throw new Error('Auth not found');
+		if (!(await bcrypt.compare(password, auth.token)))
+			throw new Error('Неверный логин или пароль');
 
-		if (!auth) return new Error('Auth not found');
-		if (!(await bcrypt.compare(password, auth.token))) return new Error('Неверный логин или пароль');
-
-		return this.login(account);
+		return account;
 	}
 
 	async login(account: Account) {
 		const role = await this.accountService.getRole(account.roleId);
+		const session = await this.sessionRepos.save({ accountId: account.id });
+
 		return {
+			refresh_token: session.id,
 			access_token: this.jwtService.sign({
 				sub: account.id,
 				username: account.username,
-				role: {
-					name: role.name,
-					level: role.level,
-				},
+				role,
 			}),
 			account,
 		};
 	}
 
-	async singup(username: string, password: string) {
-		const account = await this.accountService.create({ username });
-		const token = await bcrypt.hash(password, 10);
-		await this.authRepository.save({
-			accountId: account.id,
-			token,
-		});
-		// console.log(auth);
+	async signup({ username, email, password }: SignupInput) {
+		const account = await this.accountService.create({ username, email });
 
-		const role = await this.accountService.getRole(account.roleId);
-		return {
-			access_token: this.jwtService.sign({
-				sub: account.id,
-				username: account.username,
-				role: {
-					name: role.name,
-					level: role.level,
-				},
-			}),
-			account,
-		};
+		const SALT = await bcrypt.genSalt();
+
+		await this.authRepos.save({
+			accountId: account.id,
+			token: await bcrypt.hash(password, SALT),
+		});
+		return this.login(account);
+	}
+
+	getSession(token: string) {
+		return this.sessionRepos.findOneBy({ id: token });
+	}
+
+	removeSession(token: string) {
+		return this.sessionRepos.delete(token);
 	}
 }
-
-
 
